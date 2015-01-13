@@ -1,27 +1,26 @@
 #' Compute standardized beta coeffizients for linear regression models
 #' @export
 #' @param MOD A model.
-#' @return beta coeffizients.
+#' @return beta coefficients and standard errors.
 #' @examples
-#' #load("pisa2012che.RData")
 #' data <- pisa2012che
 #'
 #' ## linear regression models with numerical covariates only
 #' fit1 <- lm(MATH ~ ESCS + USEMATH, data)
-#' betas(fit1)
+#' betas.lm(fit1)
 #'
 #' ## linear regression models with numerical and factorial covariates
 #' fit2 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC + ST28Q01, data)
-#' betas(fit2)
+#' betas.lm(fit2)
 #'
 #' ## weighted linear regression models
 #' fit3 <- lm(MATH ~ ESCS + USEMATH, data, weights = W_FSTUWT)
-#' betas(fit3)
+#' betas.lm(fit3)
 #'
 #' fit4 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC + ST28Q01, data, weights = W_FSTUWT)
-#' betas(fit4)
+#' betas.lm(fit4)
 
-betas <- function (MOD) {
+betas.lm <- function (MOD) {
   if(class(MOD) != "lm")
     stop("Object must be of class 'lm'")
 
@@ -29,6 +28,9 @@ betas <- function (MOD) {
 
   ## coefficients w/o intercept
   b <- MOD$coefficients[-1]
+
+  ## stand. errors w/o intercept
+  se <- summary(MOD)$coefficients[-1,2]
 
   ## build dummy variables for factors
   m <- sapply(model, function(X) model.matrix(~X-1), simplify = FALSE)
@@ -48,18 +50,25 @@ betas <- function (MOD) {
 
   ## beta = b * sd(x)/sd(y)
   beta <- b * sd[-1]/sd[1]
-  return(beta)
+  se.b <- se * sd[-1]/sd[1]
+  return(data.frame(beta=beta, se.beta=se.b))
 }
 
 #' Compute standardized beta coeffizients for robust linear regression models
-#'
+#' @export
 #' @param object A model.
 #' @param classic classic cov.
 #' @return beta coeffizients.
 #' @importFrom robust covRob
 #' @importFrom robust covClassic
+#' @examples
+#' data <- pisa2012che
+#' library(robust)
+#'
+#' fit1 <- lmRob(MATH ~ ESCS + USEMATH, data)
+#' betas.lmr(fit1)
 
-my.lmr.beta <- function (object, classic = FALSE) {
+betas.lmr <- function (object, classic = FALSE) {
   if(class(object) != "lmRob")
     stop("Object must be of class 'lmRob'")
   model <- object$model
@@ -79,12 +88,12 @@ my.lmr.beta <- function (object, classic = FALSE) {
   return(beta)
 }
 
-#' form package Hmisc
-#' @param x a numeric vector
-#' @param weights a numeric vector of weights
-#' @param normwt specify normwt=TRUE to make weights sum to length(x) after deletion of NAs
-#' @param
-#' @return beta coeffizients.
+# form package Hmisc
+# @param x a numeric vector
+# @param weights a numeric vector of weights
+# @param normwt specify normwt=TRUE to make weights sum to length(x) after deletion of NAs
+# @param na.rm  set to FALSE to suppress checking for NAs
+# @return weighted variance.
 
 my.wtd.var <- function (x, weights = NULL, normwt = FALSE, na.rm = TRUE)
 {

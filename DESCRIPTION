@@ -1,14 +1,14 @@
 Package: betas
-Title: Compute standardized beta coeffizients for linear regression models
-Version: 0.1
-Authors@R: "Andrea Cantieni <andrea.cantieni@gmail.com> [aut, cre]"
-Description: Compute standardized beta coeffizients for the following models:
+Title: Computes standardized beta coefficients for (robust) linear regression models
+Version: 0.0.0.9000
+Authors@R: person("Andrea", "Cantieni", email = "andrea.cantieni@gmail.com",
+    role = c("aut", "cre"))
+Description: Computes standardized beta coefficients and corresponding
+    standard errors for the following models:
     - linear regression models with numerical covariates only
     - linear regression models with numerical and factorial covariates
-    - linear regression models without intercept
     - weighted linear regression models
-    - robust linear regression models
-    - all this models for groups and with or without intercept
+    - robust linear regression models with numerical covariates only
 Depends:
     R (>= 3.1.1)
 Imports:
