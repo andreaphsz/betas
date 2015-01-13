@@ -7,10 +7,14 @@
 betas.lm(MOD)
 }
 \arguments{
-\item{MOD}{A model.}
+\item{MOD}{A model of class \code{lm}.}
 }
 \value{
-beta coeffizients.
+A data.frame with two columns
+\tabular{ll}{
+  \code{beta} \tab standardized beta coefficients\cr
+  \code{se.beta} \tab standard errors for the beta coefficients\cr
+}
 }
 \description{
 Compute standardized beta coeffizients for linear regression models

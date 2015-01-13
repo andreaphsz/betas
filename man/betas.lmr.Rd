@@ -7,19 +7,19 @@
 betas.lmr(object, classic = FALSE)
 }
 \arguments{
-\item{object}{A model.}
+\item{object}{A model of class \code{lmRob}.}
 
-\item{classic}{classic cov.}
+\item{classic}{Logical TRUE for classic covariance estimation.}
 }
 \value{
-beta coeffizients.
+Vector with standardized beta coefficients.
 }
 \description{
 Compute standardized beta coeffizients for robust linear regression models
 }
 \examples{
-data <- pisa2012che
 library(robust)
+data <- pisa2012che
 
 fit1 <- lmRob(MATH ~ ESCS + USEMATH, data)
 betas.lmr(fit1)

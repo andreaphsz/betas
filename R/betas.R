@@ -1,7 +1,11 @@
 #' Compute standardized beta coeffizients for linear regression models
 #' @export
-#' @param MOD A model.
-#' @return beta coefficients and standard errors.
+#' @param MOD A model of class \code{lm}.
+#' @return A data.frame with two columns
+#' \tabular{ll}{
+#'   \code{beta} \tab standardized beta coefficients\cr
+#'   \code{se.beta} \tab standard errors for the beta coefficients\cr
+#' }
 #' @examples
 #' data <- pisa2012che
 #'
@@ -56,14 +60,14 @@ betas.lm <- function (MOD) {
 
 #' Compute standardized beta coeffizients for robust linear regression models
 #' @export
-#' @param object A model.
-#' @param classic classic cov.
-#' @return beta coeffizients.
+#' @param object A model of class \code{lmRob}.
+#' @param classic Logical TRUE for classic covariance estimation.
+#' @return Vector with standardized beta coefficients.
 #' @importFrom robust covRob
 #' @importFrom robust covClassic
 #' @examples
-#' data <- pisa2012che
 #' library(robust)
+#' data <- pisa2012che
 #'
 #' fit1 <- lmRob(MATH ~ ESCS + USEMATH, data)
 #' betas.lmr(fit1)
