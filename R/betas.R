@@ -69,8 +69,14 @@ betas.lm <- function (MOD) {
 #' library(robust)
 #' data <- pisa2012che
 #'
-#' fit1 <- lmRob(MATH ~ ESCS + USEMATH, data)
+#' ## robust estimation of betas
+#' fit1 <- lmRob(MATH ~ ESCS, data)
 #' betas.lmr(fit1)
+#'
+#' ## example where robust variance cannot be computed,
+#' ## instead the classical variance is used.
+#' fit2 <- lmRob(MATH ~ ESCS + USEMATH, data)
+#' betas.lmr(fit2)
 
 betas.lmr <- function (object, classic = FALSE) {
   if(class(object) != "lmRob")
