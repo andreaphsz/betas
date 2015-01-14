@@ -1,7 +1,7 @@
 Package: betas
 Title: Standardized Beta Coefficients
-Version: 0.0.0.9000
-Authors@R: person("Andrea", "Cantieni", email = "andrea.cantieni@gmail.com",
+Version: 0.1.0
+Authors@R: person("Andrea", "Cantieni", email = "andrea.cantieni@phsz.ch",
     role = c("aut", "cre"))
 Description: Computes standardized beta coefficients and corresponding
     standard errors for the following models:
