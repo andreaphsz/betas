@@ -4,11 +4,11 @@ This is an R package providing functions to compute standardaized regression coe
 ## Using the package
 The use is as simple as 
 ```r
-betas.lm(fit)
+betas.lm(fit)   # fit is a linear model
 ```
 or 
 ```r
-betas.lmr(fit.robust)
+betas.lmr(fit.robust)   # fit.robust is a robust linear model
 ```
 
 ## Installation
@@ -21,6 +21,7 @@ or installing from GitHub
 ```r
 library(devtools)
 install_github("andreaphsz/betas.git")
+library(betas)
 ```
 
 ## Included data set
