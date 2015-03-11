@@ -28,7 +28,7 @@ betas.lm <- function (MOD) {
   if(class(MOD) != "lm")
     stop("Object must be of class 'lm'")
 
-  model <- MOD$model
+  #model <- MOD$model
 
   ## coefficients w/o intercept
   b <- MOD$coefficients[-1]
@@ -37,24 +37,29 @@ betas.lm <- function (MOD) {
   se <- summary(MOD)$coefficients[-1,2]
 
   ## build dummy variables for factors
-  m <- sapply(model, function(X) model.matrix(~X-1), simplify = FALSE)
+  #m <- sapply(model, function(X) model.matrix(~X-1), simplify = FALSE)
 
   ## compute sd w/ and w/o weights
-  if(is.null(MOD$weights)) {
-    sdm <- lapply(m, function(X) apply(X, 2, sd))
+  X <- qr.X(MOD$qr)
+  if(is.null(w <- MOD$weights)) {
+    #sdm <- lapply(m, function(X) apply(X, 2, sd))
+    sdx <- apply(X, 2, sd)[-1]
   } else {
-    w <- unlist(m[length(m)])
-    m <- m[-length(m)]
-    sdm <- lapply(m, function(X) apply(X, 2, function(Y) sqrt(my.wtd.var(Y, w))))
+    #w <- unlist(m[length(m)])
+    #m <- m[-length(m)]
+    #sdm <- lapply(m, function(X) apply(X, 2, function(Y) sqrt(my.wtd.var(Y, w))))
+    sdx <- apply(X, 2, function(Y) sqrt(my.wtd.var(Y, w)))[-1]
   }
 
   ## remove first element for factors
-  sdm1 <- lapply(sdm, function(X) if(length(X)>1) X[-1] else X)
-  sd <- unlist(sdm1)
-
+  #sdm1 <- lapply(sdm, function(X) if(length(X)>1) X[-1] else X)
+  #sd <- unlist(sdm1)
+  sdy <- sd(MOD$model[,1])
   ## beta = b * sd(x)/sd(y)
-  beta <- b * sd[-1]/sd[1]
-  se.b <- se * sd[-1]/sd[1]
+  #beta <- b * sd[-1]/sd[1]
+  beta <- b * sdx/sdy
+  se.b <- se * sdx/sdy
+
   return(data.frame(beta=beta, se.beta=se.b))
 }
 
