@@ -13,9 +13,17 @@
 #' fit1 <- lm(MATH ~ ESCS + USEMATH, data)
 #' betas.lm(fit1)
 #'
+#' ## ...and with interaction terms
+#' fit1.1 <- lm(MATH ~ ESCS * USEMATH, data)
+#' betas.lm(fit1.1)
+#'
 #' ## linear regression models with numerical and factorial covariates
 #' fit2 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC + ST28Q01, data)
 #' betas.lm(fit2)
+#'
+#' ## ...and with interaction terms
+#' fit2.1 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC * ST28Q01, data)
+#' betas.lm(fit2.1)
 #'
 #' ## weighted linear regression models
 #' fit3 <- lm(MATH ~ ESCS + USEMATH, data, weights = W_FSTUWT)
@@ -23,12 +31,17 @@
 #'
 #' fit4 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC + ST28Q01, data, weights = W_FSTUWT)
 #' betas.lm(fit4)
+#'
+#' ## ...with interaction terms
+#' fit3.1 <- lm(MATH ~ ESCS * USEMATH, data, weights = W_FSTUWT)
+#' betas.lm(fit3.1)
+#'
+#' fit4.1 <- lm(MATH ~ ESCS + USEMATH + ST04Q01 + FAMSTRUC * ST28Q01, data, weights = W_FSTUWT)
+#' betas.lm(fit4.1)
 
 betas.lm <- function (MOD) {
   if(class(MOD) != "lm")
     stop("Object must be of class 'lm'")
-
-  #model <- MOD$model
 
   ## coefficients w/o intercept
   b <- MOD$coefficients[-1]
@@ -36,27 +49,18 @@ betas.lm <- function (MOD) {
   ## stand. errors w/o intercept
   se <- summary(MOD)$coefficients[-1,2]
 
-  ## build dummy variables for factors
-  #m <- sapply(model, function(X) model.matrix(~X-1), simplify = FALSE)
-
   ## compute sd w/ and w/o weights
   X <- qr.X(MOD$qr)
   if(is.null(w <- MOD$weights)) {
-    #sdm <- lapply(m, function(X) apply(X, 2, sd))
     sdx <- apply(X, 2, sd)[-1]
   } else {
-    #w <- unlist(m[length(m)])
-    #m <- m[-length(m)]
-    #sdm <- lapply(m, function(X) apply(X, 2, function(Y) sqrt(my.wtd.var(Y, w))))
     sdx <- apply(X, 2, function(Y) sqrt(my.wtd.var(Y, w)))[-1]
   }
 
-  ## remove first element for factors
-  #sdm1 <- lapply(sdm, function(X) if(length(X)>1) X[-1] else X)
-  #sd <- unlist(sdm1)
+  ## sd of response variable
   sdy <- sd(MOD$model[,1])
+
   ## beta = b * sd(x)/sd(y)
-  #beta <- b * sd[-1]/sd[1]
   beta <- b * sdx/sdy
   se.b <- se * sdx/sdy
 
