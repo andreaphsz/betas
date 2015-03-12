@@ -41,7 +41,10 @@
 
 betas.lm <- function (MOD) {
   if(class(MOD) != "lm")
-    stop("Object must be of class 'lm'")
+    stop("Object must be of class 'lm'.")
+
+  if(is.null(MOD$qr))
+    stop("Please refit model with 'qr = TRUE'.")
 
   ## coefficients w/o intercept
   b <- MOD$coefficients[-1]
