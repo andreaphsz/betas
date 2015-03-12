@@ -20,7 +20,7 @@ library(betas)
 or installing from GitHub
 ```r
 library(devtools)
-install_github("andreaphsz/betas.git")
+install_github("andreaphsz/betas")
 library(betas)
 ```
 
